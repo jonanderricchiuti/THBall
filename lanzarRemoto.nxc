@@ -12,11 +12,8 @@ sub BTCheck(int conn){
 }
 task main(){
    BTCheck(BT_CONN);
-  //int x;
-   //until(BluetoothStatus(BT_CONN)==NO_ERR);
-   //x = RemoteStartProgram(1, "lanzar.rxe");
    int x;
    until(BluetoothStatus(BT_CONN)==NO_ERR);
-   x = RemoteStartProgram(1, "Ultrasonido.rxe");
+   x = RemoteStartProgram(1, "lanzar.rxe");
 
 }

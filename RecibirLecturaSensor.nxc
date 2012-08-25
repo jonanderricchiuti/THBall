@@ -18,5 +18,12 @@ task main(){
    int x;
    until(BluetoothStatus(BT_CONN)==NO_ERR);
    x = RemoteStartProgram(1, "Ultrasonido.rxe");
-
+   int y;
+    // para recibir la lectura de otro sensor
+  while(true)
+  {y=4;
+   ReceiveRemoteNumber(0,true,y);
+   NumOut(5,LCD_LINE3,y);
+   Wait(2000);
+   }
 }

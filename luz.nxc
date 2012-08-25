@@ -1,0 +1,53 @@
+task main()
+{
+  SetSensorLight(IN_3); //sensor derecha
+  SetSensorLight(IN_4); //sensor izquierda
+  int y ;
+  int x;
+  while(true){
+  y=Sensor(IN_4);
+  x= Sensor(IN_3);
+  
+  if (x>40 && y>40){
+     OnRev(OUT_AB, 60);
+     Wait(200);
+  }
+  else if (x>40 && y<40){
+       OnFwd(OUT_AB,60);
+       Wait(100);
+       // girar derecha
+       ResetAllTachoCounts(OUT_AB);
+        Wait(1);
+        OnFwdSyncEx(OUT_AB, 60, -100, RESET_ALL);
+        until(MotorTachoCount(OUT_A) > 280);
+        ResetAllTachoCounts(OUT_AB);
+        Off(OUT_AB);
+
+  }
+  
+  else if(x<40 && y>40){
+       // girar izquierda
+       OnFwd(OUT_AB,60);
+       Wait(100);
+
+       ResetAllTachoCounts(OUT_AB);
+       Wait(1);
+       OnRevSyncEx(OUT_AB, 60, -100, RESET_ALL);
+       until(MotorTachoCount(OUT_A) > 500);
+       ResetAllTachoCounts(OUT_AB);
+       Off(OUT_AB);
+  }
+  
+  else{
+        OnFwd(OUT_AB, 80);
+        Wait(100);
+        // girar derecha
+           ResetAllTachoCounts(OUT_AB);
+        Wait(1);
+        OnFwdSyncEx(OUT_AB, 60, -100, RESET_ALL);
+        until(MotorTachoCount(OUT_A) > 500);
+        ResetAllTachoCounts(OUT_AB);
+        Off(OUT_AB);
+  }
+  }
+}
