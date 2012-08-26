@@ -1,0 +1,13 @@
+task main (){
+ int x;
+ SetSensorLowspeed(IN_4);
+ while(true){
+
+ x = SensorUS(IN_4);
+
+ NumOut(5,LCD_LINE3,x);
+ TextOut(0,LCD_LINE5," estupido");
+ SendRemoteNumber(0,0,x);
+
+
+}
