@@ -1,53 +1,59 @@
+#define SENSOR_DER IN_3
+#define SENSOR_IZQ IN_4
+#define Motor_Der OUT_A
+#define Motor_izq OUT_B
+#define Motor_Ambos OUT_AB
+#define Negro 40
 task main()
 {
-  SetSensorLight(IN_3); //sensor derecha
-  SetSensorLight(IN_4); //sensor izquierda
-  int y ;
-  int x;
+  SetSensorLight(SENSOR_DER);
+  SetSensorLight(SENSOR_IZQ);
+  int luz_der ;
+  int luz_izq;
   while(true){
-  y=Sensor(IN_4);
-  x= Sensor(IN_3);
+  luz_izq=Sensor(SENSOR_IZQ);
+  luz_der= Sensor(SENSOR_DER);
   
-  if (x>40 && y>40){
-     OnRev(OUT_AB, 60);
+  if (luz_der>Negro && luz_izq>Negro){
+    OnRevSyncEx(Motor_Ambos, 50, 0, RESET_ALL);
      Wait(200);
   }
-  else if (x>40 && y<40){
-       OnFwd(OUT_AB,60);
-       Wait(100);
+  else if (luz_der>Negro && luz_izq<Negro){
+       OnFwdSyncEx(Motor_Ambos, 60, 0, RESET_ALL);
+       Wait(1000);
        // girar derecha
-       ResetAllTachoCounts(OUT_AB);
-        Wait(1);
-        OnFwdSyncEx(OUT_AB, 60, -100, RESET_ALL);
-        until(MotorTachoCount(OUT_A) > 280);
-        ResetAllTachoCounts(OUT_AB);
-        Off(OUT_AB);
+       ResetAllTachoCounts(Motor_Ambos);
+      Wait(1);
+      OnRevSyncEx(Motor_Ambos, 60, -100, RESET_ALL);
+      until(MotorTachoCount(Motor_Der) > 270);
+       ResetAllTachoCounts(Motor_Ambos);
+       Off(Motor_Ambos);
 
   }
   
-  else if(x<40 && y>40){
+  else if(luz_der<Negro && luz_izq>Negro){
+        OnFwdSyncEx(Motor_Ambos, 60, 0, RESET_ALL);
+        Wait(1000);
        // girar izquierda
-       OnFwd(OUT_AB,60);
-       Wait(100);
 
-       ResetAllTachoCounts(OUT_AB);
+       ResetAllTachoCounts(Motor_Ambos);
        Wait(1);
-       OnRevSyncEx(OUT_AB, 60, -100, RESET_ALL);
-       until(MotorTachoCount(OUT_A) > 500);
-       ResetAllTachoCounts(OUT_AB);
-       Off(OUT_AB);
+        OnFwdSyncEx(Motor_Ambos, 60, 100, RESET_ALL);
+        until(MotorTachoCount(Motor_izq) > 350);
+        ResetAllTachoCounts(Motor_Ambos);
+        Off(Motor_Ambos);
   }
   
   else{
-        OnFwd(OUT_AB, 80);
+         OnFwdSyncEx(Motor_Ambos, 60, 0, RESET_ALL);
         Wait(100);
         // girar derecha
-           ResetAllTachoCounts(OUT_AB);
+        ResetAllTachoCounts(Motor_Ambos);
         Wait(1);
-        OnFwdSyncEx(OUT_AB, 60, -100, RESET_ALL);
-        until(MotorTachoCount(OUT_A) > 500);
-        ResetAllTachoCounts(OUT_AB);
-        Off(OUT_AB);
+        OnFwdSyncEx(Motor_Ambos, 60, -100, RESET_ALL);
+        until(MotorTachoCount(Motor_Der) > 270);
+        ResetAllTachoCounts(Motor_Ambos);
+        Off(Motor_Ambos);
   }
   }
 }
