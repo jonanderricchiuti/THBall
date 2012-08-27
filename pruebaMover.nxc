@@ -1,0 +1,27 @@
+task main()
+{
+// pa adelante
+     //OnRev(OUT_AB, 60);
+     //Wait(1000);
+ // pa atras
+      //OnFwd(OUT_AB,60);
+      //Wait(100);
+       // girar derecha
+       //ResetAllTachoCounts(OUT_AB);
+       //Wait(1);
+        //OnFwdSyncEx(OUT_AB, 60, -100, RESET_ALL);
+        //until(MotorTachoCount(OUT_A) > 280);
+        //ResetAllTachoCounts(OUT_AB);
+        //Off(OUT_AB);
+
+      // PlaySound(5);
+       //Wait(100);
+       // girar izquierda
+
+      ResetAllTachoCounts(OUT_AB);
+      Wait(1);
+      OnRevSyncEx(OUT_AB, 60, -100, RESET_ALL);
+       until(MotorTachoCount(OUT_A) > 500);
+       ResetAllTachoCounts(OUT_AB);
+       Off(OUT_AB);
+ }
