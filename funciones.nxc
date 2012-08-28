@@ -1,0 +1,54 @@
+/* Archivo para poner funciones de uso comun en los algoritmos
+y miscelaneas
+*/
+
+/*
+  Suena un solo tono
+*/
+sub tono(int valor) {
+  PlayTone(valor,400);
+  Wait(25);
+  StopSound();
+}
+
+/*
+  Suena muchos tonos y hace una pequeña escala
+*/
+sub tonos (){
+  for ( int i = 0 ; i < 20 ; i++){
+    tono(i*113);
+  }
+}
+
+/*
+   Obtiene el grado que mide la brújula calculando un promedio de
+   mediciones.
+*/
+int grado(){
+    int prom = 0;
+    int num = 1;
+    for ( int i = 0 ; i < num; ++i){
+        prom = prom + SensorHTCompass(IN_2);
+    }
+    prom = prom / num;
+    return prom;
+}
+
+/*
+ Muestra en número en la linea 2 de la pantalla
+*/
+sub imprimirNumero(int cosas){
+    ClearScreen();
+    NumOut(0, LCD_LINE2, cosas);
+}
+
+/*
+  Función que calcula el mínimo entre dos números
+*/
+int minimo(int a, int b){
+  if (a <= b) {
+    return a;
+  } else {
+    return b;
+  }
+}

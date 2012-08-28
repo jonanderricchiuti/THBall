@@ -1,0 +1,97 @@
+/*Librería mágica fantastica y todapoderosa para utilizar la brújula
+  Los grados se miden de la siguiente forma:
+  EL polo magnético Norte corresponde al 0 , el Sur a 180, Este a 90
+  y Oeste a 270. A medida de que se va girando hacia la derecha los grados van
+  aumentando y hacia la izquierda disminuyendo.
+  Esta regla da a entender que se trata de un orden circular comenzado en 0 y
+  que termina en 359 grados. Por lo que se deja de cumplir en el cruce
+  entre el inicio y el final.
+  Es por esto que se utiliza constantemente el %360 o módulo 360.
+  Otra observación importante es que por algún motivo el operador modulo no
+  funciona bien para números negativos, por eso se suma a veces 360 antes de
+  aplicar modulo, cosa que en otras circunstancias parecería redundante.
+ */
+#ifndef FUNCIONES
+#define FUNCIONES
+#include "funciones.nxc" funciones
+#endif
+#define RDER OUT_B
+#define RIZQ OUT_A
+#define AMBOS OUT_AB
+#define VELGIRO 10
+#define ERRORGRADOS 2
+#define velMin 20
+
+/*Estas son variables que representaran los puntos cardinales relativos a
+ una primera orientación:
+ Norte seria adelante, Sur atras, Este derecha y Oeste izquierda
+ No confundir con los puntos cardinales reales
+ */
+int Norte;
+int Este;
+int Oeste;
+int Sur;
+
+/*
+ Función que establece los puntos cardinales relativos.
+ Todos los puntos se establecen a partir del Norte (excepto el Norte)
+ La función grado mide el grado que detecta actualmente la brujula
+ y se encuentra en las funciones generales
+*/
+sub calibrarCoord() {
+    Norte = grado();
+    NumOut(5,LCD_LINE3,Norte);
+    Wait(1000);
+    Este = (Norte + 90)%360;
+    Oeste = (Norte + 270)%360;
+    Sur = (Norte + 180)%360;
+}
+
+/*
+ Función que recibe un angulo y hace que el robot gire hasta alcanzarlo
+ Supone que los motores estan en los puertos A y B
+ Se pueden utilizar los puntos cardinales relativos como argumento.
+ */
+sub girar(int dir){
+  bool listo = FALSE;
+  int error = 0;
+  while (!listo){
+  /*error es el calculo de la mínima distancia circular entre el angulo actual
+    y el deseado
+   Si esta distancia es mayor a el error máximo establecido el algorítmo seguirá
+    produciendo
+   un giro
+   */
+    if((error = minimo((dir + 360 - grado())%360, (grado() + 360 - dir)%360)) >= ERRORGRADOS){
+    // Dibuja en pantalla los datos para fines de debugueo
+    ClearScreen();
+    NumOut(0, LCD_LINE3, dir);
+    NumOut(0, LCD_LINE4, grado());
+    NumOut(0, LCD_LINE5, error);
+      /*
+       Verifica si la distancia menor entre los angulos se alcanza por la izquierda
+      */
+      if((dir-grado() + 360)%360 < 180){
+        Off(OUT_AB);
+        
+        /* gira a la izquierda con mayor velocidad mientras mayor sea el error
+           donde la mínima velocidad es el valor de la variable velMin
+        */
+
+        OnFwdSyncEx(AMBOS, 60, -100, RESET_ALL);
+
+      } else {
+        Off(OUT_AB);
+        
+        /* gira a la derecha con mayor velocidad mientras mayor sea el error
+           donde la mínima velocidad es el valor de la variable velMin
+        */
+        OnFwdSyncEx(AMBOS, 60, -100,RESET_ALL);
+      }
+    } else{
+      Off(OUT_AB);
+      listo = TRUE;
+    }
+  }
+}
+
