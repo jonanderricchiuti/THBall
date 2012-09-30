@@ -12,12 +12,20 @@
 #ifndef COMPASS
 #define COMPASS
 #include "compass.nxc" compass
+#endif
 
 /* Declaracion de Constantes */
 /* MOTORS: Atajo para tener acceso a ambos motores a la vez */
-#define MOTORS = "OUT_AB"
+#define MOTORS OUT_AB
+
+/* Definicion de los puertos de los sensores */
+#define S1 0
+#define S2 1
+#define S3 2
+#define S4 3
+
 /* USsensor: Definida como el puerto al que se conecto el sensor de sonido */
-#define USsensor = "S1"
+#define USsensor IN_1
 
 /* Declaracion de Variables */
 /* lvl: Hace referencia a la linea por la cual camina el robot en este momento */
@@ -25,70 +33,110 @@ int lvl = 0;
 /* dir: hace referencia a la orientacion o hacia donde ve el robot */
 int dir = 0;
 /* minDis: hace referencia a la minima distancia permitida */
-int minDis = 10;
-/* minTopDis: hace referencia a la minima distancia permitida respecto a zona muerta*/
-int minTopDis = 10;
+int minDis = 23;
 /* vel: hace referencia a la velocidad a la que se desplazara el robot */
-int vel = 20;
+int vel = 70;
 /* time: sera la unidad basica de tiempo que durara el robot moviendose */
-int time = 100
+int time = 100;
 /* timeLvl: tiempo que le toma ir de un nivel a otro */
-int medLvl = 2000;
+int timeLvl = 2000;
 
 int checkUS() {
-  return USvalue = US;
+  return SensorUS(USsensor);
 }
 
 sub goLeft(){
-  dir = 3;
-  getPosition(west);
-  int distance = checkUS();
-  while (distance > minDis) {
-	OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
-	wait(time);
-	getPosition(west);
-	distance = checkUS();
+  if (dir == 0) {
+    getPosition(west);
+    int distance = checkUS();
+    while (distance > minDis) {
+	    OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	    Wait(time);
+	    getPosition(west);
+	    distance = checkUS();
+    }
+  } else if (dir == 2) {
+    getPosition(east);
+    int distance = checkUS();
+    while (distance > minDis) {
+	    OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	    Wait(time);
+	    getPosition(east);
+	    distance = checkUS();
+	}
   }
+  dir = 3;
 }
 
 sub goRight(){
-  dir = 1;
-  getPosition(east);
-  int distance = checkUS();
-  while (distance > minDis) {
-	OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
-	wait(time);
-	getPosition(east);
-	distance = checkUS();
+  if (dir == 0) {
+    getPosition(east);
+    int distance = checkUS();
+    while (distance > minDis) {
+	    OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	    Wait(time);
+	    getPosition(east);
+	    distance = checkUS();
+    }
+  } else if (dir == 2) {
+    getPosition(west);
+    int distance = checkUS();
+    while (distance > minDis) {
+	    OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	    Wait(time);
+	    getPosition(west);
+	    distance = checkUS();
+    }
   }
+  dir = 1;
 }
 
 sub changeLevel(int next){
   int difLvl = abs(next - lvl);
   int actualTime = 0;
   if ((next == 2) || (lvl == 0 && next == 1))  {
-	dir = 0;
-	while (actualTime < (difLvl * timeLvl)) {
-	  getPosition(north);  	
-	  OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
-	  wait(time);
-	  actualTime += time;
-	}
+	  dir = 0;
+	  while (actualTime < (difLvl * timeLvl)) {
+	    getPosition(north);
+	    OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	    Wait(time);
+	    actualTime += time;
+	  }
   } else if ((next == 0) || (lvl == 2 && next == 1)) {
-	dir = 2;
-	while (actualTime < (diflvl * timeLvl)){
-	getPosition(south);
-	OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
-	wait(time);
-	actualTime += time;	
-	}
+	  dir = 2;
+	  while (actualTime < (difLvl * timeLvl)){
+	    getPosition(south);
+	    OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	    Wait(time);
+	    actualTime += time;
+  	}
   }
   lvl = next;
 }
 
-main () {
+task main () {
+  setInitialPosition();
+  SetSensorLowspeed(IN_1);
+/* Norte Infinito */
+/*
+  int actualTime = 0;
+  int maxTime = 10000;
+  while (actualTime < maxTime) {
+    OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+    getPosition(north);
+    actualTime += time;
+  }
+*/
+/* Giros */
+/*
+  getPosition
+  getPosition(south);
+*/
+  
+/* Pre-Robot 2 */
+  
 /* Robot 2 */
-  wait(2*timeLvl);
+/*  setInitialPosition();
   goLeft();
   changeLevel(1);
   goRight();
@@ -97,7 +145,9 @@ main () {
   changeLevel(1);
   goRight();
   changeLevel(0);
+*/
 /* Robot 1 */
+/*  setInitialPosition();
   changeLevel(2);
   goRight();
   changeLevel(1);
@@ -106,5 +156,5 @@ main () {
   goRight();
   changeLevel(1);
   goLeft();
-  changeLevel(2);
+  changeLevel(2);*/
 }

@@ -48,22 +48,22 @@ int degrees(int p) {
 
 sub getPosition(int finalPosition) {
     bool go = TRUE;
-    int rotate = degrees(1) - finalPosition;
+    int rotate = degrees(5) - finalPosition;
     if (rotate < 0) {
        rotate = rotate + 360;
     }
     if (rotate <= 180) {
        while (go) {
-          if (abs(degrees(1) - finalPosition) >= 3) {
-            OnFwdSyncEx(MOTORS, 30, -100, RESET_ALL);
+          if (abs(degrees(5) - finalPosition) >= 3) {
+            OnFwdSyncEx(MOTORS, 35, -100, RESET_ALL);
           } else {
             go = FALSE;
           }
        }
     } else {
        while (go) {
-          if (abs(degrees(1) - finalPosition) >= 3) {
-            OnFwdSyncEx(MOTORS, 30, 100, RESET_ALL);
+          if (abs(degrees(5) - finalPosition) >= 3) {
+            OnFwdSyncEx(MOTORS, 35, 100, RESET_ALL);
           } else {
             Off(MOTORS);
             go = FALSE;
@@ -81,16 +81,8 @@ sub getPosition(int finalPosition) {
     * cardinals points.
     */
    sub setInitialPosition() {
-      north = degrees(4);
+      north = degrees(10);
       south = (north + 180)%360;
       east = (north + 90)%360;
       west = (north + 270)%360;
    }
-   
-task main() {
-   //while (TRUE) {
-   setInitialPosition();
-   //}
-   getPosition(west);
-   
-}
