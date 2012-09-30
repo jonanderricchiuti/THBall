@@ -1,0 +1,110 @@
+/*
+ * Archivo de movimiento de Robot jugador de THBall
+ * Autor: jlezama@GIA-SEK
+ * Fecha: 29/Sep/2012
+ *
+ * Descripcion: Archivo de movimiento, para controlar a un nxt utilizando los
+ * sensores de Ultrasonido y Brujula para guiarse
+ *
+ */
+
+/* Importando Archivos */
+#ifndef COMPASS
+#define COMPASS
+#include "compass.nxc" compass
+
+/* Declaracion de Constantes */
+/* MOTORS: Atajo para tener acceso a ambos motores a la vez */
+#define MOTORS = "OUT_AB"
+/* USsensor: Definida como el puerto al que se conecto el sensor de sonido */
+#define USsensor = "S1"
+
+/* Declaracion de Variables */
+/* lvl: Hace referencia a la linea por la cual camina el robot en este momento */
+int lvl = 0;
+/* dir: hace referencia a la orientacion o hacia donde ve el robot */
+int dir = 0;
+/* minDis: hace referencia a la minima distancia permitida */
+int minDis = 10;
+/* minTopDis: hace referencia a la minima distancia permitida respecto a zona muerta*/
+int minTopDis = 10;
+/* vel: hace referencia a la velocidad a la que se desplazara el robot */
+int vel = 20;
+/* time: sera la unidad basica de tiempo que durara el robot moviendose */
+int time = 100
+/* timeLvl: tiempo que le toma ir de un nivel a otro */
+int medLvl = 2000;
+
+int checkUS() {
+  return USvalue = US;
+}
+
+sub goLeft(){
+  dir = 3;
+  getPosition(west);
+  int distance = checkUS();
+  while (distance > minDis) {
+	OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	wait(time);
+	getPosition(west);
+	distance = checkUS();
+  }
+}
+
+sub goRight(){
+  dir = 1;
+  getPosition(east);
+  int distance = checkUS();
+  while (distance > minDis) {
+	OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	wait(time);
+	getPosition(east);
+	distance = checkUS();
+  }
+}
+
+sub changeLevel(int next){
+  int difLvl = abs(next - lvl);
+  int actualTime = 0;
+  if ((next == 2) || (lvl == 0 && next == 1))  {
+	dir = 0;
+	while (actualTime < (difLvl * timeLvl)) {
+	  getPosition(north);  	
+	  OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	  wait(time);
+	  actualTime += time;
+	}
+  } else if ((next == 0) || (lvl == 2 && next == 1)) {
+	dir = 2;
+	while (actualTime < (diflvl * timeLvl)){
+	getPosition(south);
+	OnFwdSyncEx(MOTORS, vel, 0, RESET_ALL);
+	wait(time);
+	actualTime += time;	
+	}
+  }
+  lvl = next;
+}
+
+main () {
+/* Robot 2 */
+  wait(2*timeLvl);
+  goLeft();
+  changeLevel(1);
+  goRight();
+  changeLevel(2);
+  goLeft();
+  changeLevel(1);
+  goRight();
+  changeLevel(0);
+/* Robot 1 */
+  changeLevel(2);
+  goRight();
+  changeLevel(1);
+  goLeft();
+  changeLevel(0);
+  goRight();
+  changeLevel(1);
+  goLeft();
+  changeLevel(2);
+}
