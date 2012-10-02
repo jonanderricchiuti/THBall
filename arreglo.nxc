@@ -1,0 +1,97 @@
+int pelotas[6];
+int n;
+
+void ubicar_pelotas(){
+
+  for (int i = 0; i < 12; i++){
+    pelotas[i] = 0;
+  }
+  
+  }
+  
+task main(){
+
+  SetSensorLowspeed(IN_1);
+  SetHTColor2Mode(IN_1, HT_CMD_COLOR2_LED_HI);
+  ubicar_pelotas();
+    
+  while(true){
+  
+  SetHTColor2Mode(IN_1, HT_CMD_COLOR2_LED_HI);
+  int color = SensorHTColorNum(IN_1);
+
+    OnRev(OUT_C,90);
+    Wait(100);
+    TextOut( 0, LCD_LINE7 , "Color" );
+    NumOut( 8 ,LCD_LINE8 , color);
+    Wait(1000);
+    ClearScreen();
+
+
+  if(color==7){
+
+    pelotas[n]=7;
+    OnRev(OUT_B,90);
+    Wait(3000);
+    Off(OUT_B);
+    OnFwd(OUT_B,70);
+    Wait(400);
+    OnRev(OUT_B,30);
+     Wait(500);
+     OnFwd(OUT_B,10);
+     Wait(400);
+     
+    n++;
+    
+     TextOut( 0, LCD_LINE7 , "Numero" );
+    NumOut( 8 ,LCD_LINE8 , pelotas[n-1]);
+    Wait(1000);
+    ClearScreen();
+    
+    
+
+    }
+    
+     if(color==3){
+
+    pelotas[n]=3;
+    OnRev(OUT_B,90);
+    Wait(3000);
+    Off(OUT_B);
+    OnFwd(OUT_B,70);
+    Wait(400);
+    OnRev(OUT_B,30);
+     Wait(500);
+     OnFwd(OUT_B,10);
+     Wait(400);
+
+    n++;
+
+     TextOut( 0, LCD_LINE7 , "Numero" );
+    NumOut( 8 ,LCD_LINE8 , pelotas[n-1]);
+    Wait(1000);
+    ClearScreen();
+
+
+
+    }
+
+    
+       if(n==5){
+
+         ubicar_pelotas();
+
+
+    }
+    
+    
+
+    
+    
+    
+    
+      }
+            
+}
+    
+    
