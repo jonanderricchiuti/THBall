@@ -1,16 +1,32 @@
+//MASTER
+#define BT_CONN 1
+#define MOTOR(p,s) RemoteSetOutputState(BT_CONN, p, s, \
+  OUT_MODE_MOTORON+OUT_MODE_BRAKE+OUT_MODE_REGULATED, \
+  OUT_REGMODE_SPEED, 0, OUT_RUNSTATE_RUNNING, 0)
+
 #define SENSOR_DER IN_3
 #define SENSOR_IZQ IN_4
 #define Motor_Der OUT_A
 #define Motor_izq OUT_B
 #define Motor_Ambos OUT_AB
 #define Negro 40
-task main()
-{
+
+#ifndef giroBrujula
+#define giroBrujula
+#include "giroBrujula.nxc" giroBrujula
+#endif
+
+sub Evitar_Linea(){
+  long t0 , time;
+  t0= CurrentTick();
+
   SetSensorLight(SENSOR_DER);
   SetSensorLight(SENSOR_IZQ);
   int luz_der ;
   int luz_izq;
-  while(true){
+  while(time<10000){
+  time = CurrentTick()-t0;
+
   luz_izq=Sensor(SENSOR_IZQ);
   luz_der= Sensor(SENSOR_DER);
   
@@ -45,7 +61,7 @@ task main()
   }
   
   else{
-         OnFwdSyncEx(Motor_Ambos, 60, 0, RESET_ALL);
+        OnFwdSyncEx(Motor_Ambos, 60, 0, RESET_ALL);
         Wait(100);
         // girar derecha
         ResetAllTachoCounts(Motor_Ambos);
@@ -56,4 +72,26 @@ task main()
         Off(Motor_Ambos);
   }
   }
+}
+
+sub BTCheck(int conn){
+   if (!BluetoothStatus(conn)==NO_ERR){
+      TextOut(5,LCD_LINE2,"Error");
+      Wait(1000);
+      Stop(true);
+   }
+}
+
+task main(){
+SetSensorLowspeed(IN_2);
+calibrarCoord();
+Evitar_Linea();
+girar(Norte);
+Wait(1000);
+Off(OUT_AB);
+BTCheck(BT_CONN);
+int x;
+until(BluetoothStatus(BT_CONN)==NO_ERR);
+x = RemoteStartProgram(1, "lanzar.rxe");
+
 }

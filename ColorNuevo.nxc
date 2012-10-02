@@ -1,0 +1,28 @@
+task main(){
+
+  SetSensorLowspeed(IN_1);
+  
+  SetHTColor2Mode(IN_1, HT_CMD_COLOR2_LED_HI);
+
+  while(true){
+   SetHTColor2Mode(IN_1, HT_CMD_COLOR2_LED_HI);
+  int color = SensorHTColorNum(IN_1);
+
+  TextOut( 0, LCD_LINE7 , "Color" );
+    NumOut( 8 ,LCD_LINE8 , color);
+     Wait(1000);
+    ClearScreen();
+
+  OnRevSyncEx(OUT_AB, 40, 0, RESET_ALL);
+  if(color==7){
+     Off(OUT_AB);
+     OnRev(OUT_C,80);
+    Wait(1000);
+    OnFwd(OUT_C,30);
+    Wait(600);
+    Off(OUT_C);
+
+  }
+
+    }
+}

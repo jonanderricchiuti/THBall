@@ -1,0 +1,88 @@
+#define MOTORS OUT_AB
+#define S1 0
+#define S2 1
+#define S3 2
+#define S4 3
+
+/* 
+ * Calculate the average of p measurements.
+ */
+int degrees(int p) {
+   SetSensorLowspeed(S2);
+   int res = 0;
+   for (int i = 0 ; i < p ; i++) {
+      res = res + SensorHTCompass(S2);
+   }
+   res = res/p;
+   return res;
+}
+
+/*
+ * Put the robot in the especified 
+ * direction.
+ */
+/*sub getPosition(int finalPosition) {
+   bool go = TRUE;   
+   while (go) {     */
+      /*
+       * Checks if the robot is in the wanted position.
+       */
+     /* if (abs(degrees(1) - finalPosition) >= 3) {
+         if (abs(degrees(1) - finalPosition) <= 180) {   */
+            /*
+            * Move to the left.
+            */
+          /*  OnFwdSyncEx(MOTORS, 60, -100, RESET_ALL);
+         } else {      */
+            /*
+             * Move to the right.
+             */  
+          /*  OnRevSyncEx(MOTORS, 60, 100, RESET_ALL);
+         }
+      } else {
+         Off(MOTORS);
+         go = FALSE;
+      }
+   }
+}  */
+
+sub getPosition(int finalPosition) {
+    bool go = TRUE;
+    int rotate = degrees(5) - finalPosition;
+    if (rotate < 0) {
+       rotate = rotate + 360;
+    }
+    if (rotate <= 180) {
+       while (go) {
+          if (abs(degrees(5) - finalPosition) >= 3) {
+            OnFwdSyncEx(MOTORS, 35, -100, RESET_ALL);
+          } else {
+            go = FALSE;
+          }
+       }
+    } else {
+       while (go) {
+          if (abs(degrees(5) - finalPosition) >= 3) {
+            OnFwdSyncEx(MOTORS, 35, 100, RESET_ALL);
+          } else {
+            Off(MOTORS);
+            go = FALSE;
+          }
+       }
+    }
+}
+
+   int north;
+   int south;
+   int east;
+   int west;
+   /*
+    * Set the relative values of ours
+    * cardinals points.
+    */
+   sub setInitialPosition() {
+      north = degrees(10);
+      south = (north + 180)%360;
+      east = (north + 90)%360;
+      west = (north + 270)%360;
+   }
