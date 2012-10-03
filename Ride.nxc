@@ -1,0 +1,9 @@
+sub ride(int time) {
+ OnFwdSyncEx(OUT_AB, 60, -0, RESET_ALL);
+ Wait(time);
+ Off(OUT_AB);
+}
+
+task main() {
+ ride(10000);
+}
