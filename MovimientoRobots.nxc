@@ -47,7 +47,7 @@ int checkUS() {
 sub goLeft(){
   TextOut(0,LCD_LINE3,"Yendo a Izquierda");
   int i = 0;
-  if (dir == 0) {
+  if (dir != 2) {
     getPosition(west);
     int distance = checkUS();
     while (distance > minDis) {
@@ -59,7 +59,7 @@ sub goLeft(){
 	    distance = checkUS();
        i += 1;
     }
-  } else if (dir == 2) {
+  } else {
     getPosition(east);
     int distance = checkUS();
     while (distance > minDis) {
@@ -79,7 +79,7 @@ sub goLeft(){
 sub goRight(){
   TextOut(0,LCD_LINE3,"Yendo a Derecha");
   int i = 0;
-  if (dir == 0) {
+  if (dir != 2) {
     getPosition(east);
     int distance = checkUS();
     while (distance > minDis) {
@@ -91,7 +91,7 @@ sub goRight(){
 	    distance = checkUS();
 	    i += 1;
     }
-  } else if (dir == 2) {
+  } else {
     getPosition(west);
     int distance = checkUS();
     while (distance > minDis) {
